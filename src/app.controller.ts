@@ -16,4 +16,10 @@ export class AppController {
     const orders = await this.limitOrdersService.create();
     return JSON.stringify(orders);
   }
+  
+  @Get('get-limit-orders')
+  async getAllLimitOrders(): Promise<string> {
+    const orders = await this.limitOrdersService.findAll();
+    return JSON.stringify(orders);
+  }
 }

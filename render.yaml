@@ -3,7 +3,7 @@ services:
     name: giftbox-backend
     env: node
     plan: free
-    buildCommand: yarn install && yarn prisma generate && ./node_modules/.bin/nest build
+    buildCommand: yarn install && yarn prisma generate && yarn prisma migrate deploy && yarn build
     startCommand: yarn start:prod
     envVars:
       - key: NODE_ENV

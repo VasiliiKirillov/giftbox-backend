@@ -3,7 +3,7 @@ services:
     name: giftbox-backend
     env: node
     plan: free
-    buildCommand: yarn install && yarn prisma generate && yarn build
+    buildCommand: yarn install && yarn prisma generate && yarn run build
     startCommand: yarn start:prod
     envVars:
       - key: NODE_ENV

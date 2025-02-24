@@ -14,11 +14,14 @@ datasource db {
 }
 
 model LimitOrder {
-  id        String   @id @default(uuid())
-  price     Decimal
-  amount    Decimal
-  side      String   // BUY or SELL
-  status    String   // OPEN, FILLED, CANCELLED
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    Int      @id @default(autoincrement())
+  currencyName         String
+  currencyPrice        Float
+  assetsQuantity       Float
+  orderType            String    // 'BUY' or 'SELL'
+  status               String    // 'OPEN'
+  desirableAssetsPercent Float
+  orderValue           Float
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 }

@@ -1,24 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 
+// Define interface for incoming data
+export interface CreateLimitOrderDto {
+    currencyName: string;
+    desirableAssetsPercent: string;
+    currencyPrice: string;
+    assetsQuantity: string;
+    orderValue: string;
+    orderType: 'BUY' | 'SELL';
+}
+
 @Injectable()
 export class LimitOrdersService {
     constructor(private prisma: PrismaService) { }
 
-    async create(/* data: {
-        price: number;
-        amount: number;
-        side: 'BUY' | 'SELL';
-    } */) {
+    async create(data: CreateLimitOrderDto) {
         return this.prisma.limitOrder.create({
             data: {
-                price: 100,
-                amount: 50,
-                side: 'BUY',
-                // price: data.price,
-                // amount: data.amount,
-                // side: data.side,
+                currencyName: data.currencyName,
+                currencyPrice: parseFloat(data.currencyPrice),
+                assetsQuantity: parseFloat(data.assetsQuantity),
+                orderType: data.orderType,
                 status: 'OPEN',
+                desirableAssetsPercent: parseFloat(data.desirableAssetsPercent),
+                orderValue: parseFloat(data.orderValue),
             },
         });
     }

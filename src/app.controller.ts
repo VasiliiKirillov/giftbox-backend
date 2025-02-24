@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LimitOrdersService } from './limit-orders/limit-orders.service';
+import { CreateLimitOrderDto } from './limit-orders/limit-orders.service';
 
 @Controller()
 export class AppController {
@@ -11,15 +12,15 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('limit-orders')
-  async getLimitOrders(): Promise<string> {
-    const orders = await this.limitOrdersService.create();
-    return JSON.stringify(orders);
+  @Post('limit-orders')
+  async getLimitOrders(@Body() createLimitOrderDto: CreateLimitOrderDto) {
+    const order = await this.limitOrdersService.create(createLimitOrderDto);
+    return order;
   }
   
-  @Get('get-limit-orders')
-  async getAllLimitOrders(): Promise<string> {
+  @Get('limit-orders')
+  async getAllLimitOrders() {
     const orders = await this.limitOrdersService.findAll();
-    return JSON.stringify(orders);
+    return orders;
   }
 }

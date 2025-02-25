@@ -32,4 +32,12 @@ export class LimitOrdersService {
     async findAll() {
         return this.prisma.limitOrder.findMany();
     }
+
+    async findByCurrencyName(currencyName: string) {
+        return this.prisma.limitOrder.findMany({
+            where: {
+                currencyName: currencyName
+            }
+        });
+    }
 } 

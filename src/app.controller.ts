@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LimitOrdersService } from './limit-orders/limit-orders.service';
 import { CreateLimitOrderDto } from './limit-orders/limit-orders.service';
@@ -21,6 +21,12 @@ export class AppController {
   @Get('limit-orders')
   async getAllLimitOrders() {
     const orders = await this.limitOrdersService.findAll();
+    return orders;
+  }
+
+  @Get('limit-orders/by-currency')
+  async getLimitOrdersByCurrency(@Query('currency') currencyName: string) {
+    const orders = await this.limitOrdersService.findByCurrencyName(currencyName);
     return orders;
   }
 }

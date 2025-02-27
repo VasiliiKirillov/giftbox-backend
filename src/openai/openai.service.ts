@@ -8,7 +8,8 @@ import { transactionPrompt } from './prompts/transaction.prompt';
 const Transaction = z.object({
   category: z.string(),
   amount: z.number(),
-  type: z.literal("expense"),
+  type: z.union([z.literal("expense"), z.literal("income")]),
+  message: z.string(),
 });
 
 type Transaction = z.infer<typeof Transaction> | null;
@@ -26,7 +27,7 @@ export class OpenAIService {
   async generateChatCompletion(userMessage: string): Promise<Transaction> {
     try {
       const completion = await this.openai.beta.chat.completions.parse({
-        model: "gpt-4o-mini",  // Update to your desired model
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",

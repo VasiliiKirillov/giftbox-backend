@@ -7,6 +7,7 @@ The response must be a JSON object with the following fields:
 - 'type': could be 'expense' or 'income', depending on the context, for example coffee, groceries,
     rent are expenses, but salary, gift, lottery are income. If user specify expense or income,
     then type should be 'expense' or 'income' respectively.
+- 'message': a natural language sentence confirming the transaction (e.g., 'Spent 5 dollars on coffee').
 
 If the input is unclear, ask the user to clarify. Respond only with valid JSON.
 `.trim(); 

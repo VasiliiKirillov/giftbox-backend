@@ -6,9 +6,9 @@ import { transactionPrompt } from './prompts/transaction.prompt';
 
 // Define the transaction schema
 const Transaction = z.object({
-  category: z.string(),
-  amount: z.number(),
-  type: z.union([z.literal("expense"), z.literal("income")]),
+  category: z.string().optional(),
+  amount: z.number().optional(),
+  type: z.union([z.literal("expense"), z.literal("income")]).optional(),
   message: z.string(),
 });
 

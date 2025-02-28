@@ -10,11 +10,11 @@ export class OpenAIController {
     try {
       const response = await this.openaiService.generateChatCompletion(message);
       return { success: true, response };
-    } catch (error) {
+    } catch (error: unknown) {
       return {
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : 'An unknown error occurred',
       };
     }
   }
-} 
+}

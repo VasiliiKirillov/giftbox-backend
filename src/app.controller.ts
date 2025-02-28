@@ -5,7 +5,10 @@ import { CreateLimitOrderDto } from './limit-orders/limit-orders.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService, private readonly limitOrdersService: LimitOrdersService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly limitOrdersService: LimitOrdersService,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -17,7 +20,7 @@ export class AppController {
     const order = await this.limitOrdersService.create(createLimitOrderDto);
     return order;
   }
-  
+
   @Get('limit-orders')
   async getAllLimitOrders() {
     const orders = await this.limitOrdersService.findAll();
@@ -26,7 +29,8 @@ export class AppController {
 
   @Get('limit-orders/by-currency')
   async getLimitOrdersByCurrency(@Query('currency') currencyName: string) {
-    const orders = await this.limitOrdersService.findByCurrencyName(currencyName);
+    const orders =
+      await this.limitOrdersService.findByCurrencyName(currencyName);
     return orders;
   }
 }

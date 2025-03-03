@@ -7,11 +7,13 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 
 // Define the transaction schema
 const Transaction = z.object({
-  category: z.string().optional(),
+  record: z.string().optional(),
   amount: z.number().optional(),
   type: z.union([z.literal('expense'), z.literal('income')]).optional(),
   message: z.string(),
+  report: z.string(),
   transactionRealized: z.boolean(),
+  transactionMonth: z.number(),
 });
 
 type Transaction = z.infer<typeof Transaction> | null;
@@ -41,7 +43,7 @@ export class OpenAIService {
         messages: [
           {
             role: 'system',
-            content: transactionPrompt,
+            content: transactionPrompt(1),
           },
           { role: 'user', content: userMessage },
         ],

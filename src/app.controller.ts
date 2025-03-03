@@ -29,8 +29,7 @@ export class AppController {
 
   @Get('limit-orders/by-currency')
   async getLimitOrdersByCurrency(@Query('currency') currencyName: string) {
-    const orders =
-      await this.limitOrdersService.findByCurrencyName(currencyName);
+    const orders = await this.limitOrdersService.findByCurrencyName(currencyName);
     return orders;
   }
 }

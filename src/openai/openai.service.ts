@@ -10,10 +10,10 @@ const Transaction = z.object({
   record: z.string().optional(),
   amount: z.number().optional(),
   type: z.union([z.literal('expense'), z.literal('income')]).optional(),
-  message: z.string(),
+  technicalMessage: z.string(),
   report: z.string(),
-  transactionRealized: z.boolean(),
   transactionMonth: z.number(),
+  transactionYear: z.number(),
 });
 
 type Transaction = z.infer<typeof Transaction> | null;
@@ -43,7 +43,7 @@ export class OpenAIService {
         messages: [
           {
             role: 'system',
-            content: transactionPrompt(1),
+            content: transactionPrompt(1, 2025),
           },
           { role: 'user', content: userMessage },
         ],

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { transactionPrompt } from './prompts/transaction.prompt';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import { StorageService } from '../storage/storage.service';
 
 // Define the transaction schema
 const Transaction = z.object({
@@ -14,6 +15,7 @@ const Transaction = z.object({
   report: z.string(),
   transactionMonth: z.number(),
   transactionYear: z.number(),
+  storage: z.string(),
 });
 
 type Transaction = z.infer<typeof Transaction> | null;
@@ -22,7 +24,7 @@ type Transaction = z.infer<typeof Transaction> | null;
 export class OpenAIService {
   private openai: OpenAI;
 
-  constructor() {
+  constructor(private readonly storageService: StorageService) {
     const options: ClientOptions = {
       apiKey: process.env.OPENAI_API_KEY,
     };
@@ -38,12 +40,22 @@ export class OpenAIService {
 
   async generateChatCompletion(userMessage: string): Promise<Transaction> {
     try {
+      // Get all storages
+      const storages = await this.storageService.findAll();
+      const storageNames = storages.map((storage) => storage.name).join(',');
+      const defaultStorage = storages.find((storage) => storage.isDefault)?.name || '';
+
+      // Get current date
+      const now = new Date();
+      const currentMonth = now.getMonth() + 1; // getMonth() returns 0-11
+      const currentYear = now.getFullYear();
+
       const completion = await this.openai.beta.chat.completions.parse({
         model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content: transactionPrompt(1, 2025),
+            content: transactionPrompt(currentMonth, currentYear, storageNames, defaultStorage),
           },
           { role: 'user', content: userMessage },
         ],

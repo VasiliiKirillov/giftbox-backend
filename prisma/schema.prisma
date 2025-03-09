@@ -36,3 +36,15 @@ model Storage {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model AccountingRecord {
+  id           Int      @id @default(autoincrement())
+  storageId    Int
+  amount       Float
+  type         String   // 'INCOME' or 'EXPENSE'
+  description  String
+  category     String?
+  date         DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

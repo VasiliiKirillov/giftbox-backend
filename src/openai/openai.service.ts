@@ -5,6 +5,7 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { transactionPrompt } from './prompts/transaction.prompt';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { StorageService } from '../storage/storage.service';
+import { AccountingRecordService } from '../accounting-record/accounting-record.service';
 
 // Define the transaction schema
 const Transaction = z.object({
@@ -24,7 +25,10 @@ type Transaction = z.infer<typeof Transaction> | null;
 export class OpenAIService {
   private openai: OpenAI;
 
-  constructor(private readonly storageService: StorageService) {
+  constructor(
+    private readonly accountingRecordService: AccountingRecordService,
+    private readonly storageService: StorageService,
+  ) {
     const options: ClientOptions = {
       apiKey: process.env.OPENAI_API_KEY,
     };
@@ -67,5 +71,34 @@ export class OpenAIService {
       console.error('Error calling OpenAI:', error);
       throw error;
     }
+  }
+
+  async processResponse(response: Transaction) {
+    if (!response) {
+      throw new Error('Invalid response from OpenAI');
+    }
+
+    const storage = await this.storageService.findByName(response.storage);
+    if (!storage) {
+      throw new Error(`Storage ${response.storage} not found`);
+    }
+
+    if (!response.amount || !response.type || !response.storage || !response.record) {
+      throw new Error('No data in response from OpenAI');
+    }
+
+    const accountingRecord = await this.accountingRecordService.create({
+      storageId: storage.id,
+      amount: response.amount,
+      type: response.type?.toUpperCase(),
+      description: response.record,
+      date: new Date(response.transactionYear, response.transactionMonth),
+    });
+
+    if (!accountingRecord) {
+      throw new Error('Failed to create accounting record');
+    }
+
+    return { ...response, accountingRecordId: accountingRecord.id };
   }
 }

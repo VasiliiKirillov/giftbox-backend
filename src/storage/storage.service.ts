@@ -34,4 +34,10 @@ export class StorageService {
       where: { id },
     });
   }
+
+  async findByName(name: string) {
+    return this.prisma.storage.findFirst({
+      where: { name },
+    });
+  }
 }

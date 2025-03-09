@@ -9,7 +9,11 @@ export class OpenAIController {
   async generateResponse(@Body('message') message: string) {
     try {
       const response = await this.openaiService.generateChatCompletion(message);
-      return { success: true, response };
+      if (!response) {
+        return { success: false, error: 'No response from OpenAI' };
+      }
+      const processedResponse = await this.openaiService.processResponse(response);
+      return { success: true, response: processedResponse };
     } catch (error: unknown) {
       return {
         success: false,

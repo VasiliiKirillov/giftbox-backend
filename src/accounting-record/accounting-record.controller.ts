@@ -13,7 +13,7 @@ export class AccountingRecordController {
 
   @Get()
   findAll() {
-    return this.accountingRecordService.findAll();
+    return this.accountingRecordService.findAllDesc();
   }
 
   @Get(':id')

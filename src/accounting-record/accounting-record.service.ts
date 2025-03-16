@@ -16,6 +16,12 @@ export class AccountingRecordService {
     return this.prisma.accountingRecord.findMany();
   }
 
+  async findAllDesc() {
+    return this.prisma.accountingRecord.findMany({
+      orderBy: { id: 'desc' },
+    });
+  }
+
   async findOne(id: number) {
     return this.prisma.accountingRecord.findUnique({
       where: { id },

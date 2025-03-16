@@ -99,6 +99,6 @@ export class OpenAIService {
       throw new Error('Failed to create accounting record');
     }
 
-    return { ...response, accountingRecordId: accountingRecord.id };
+    return accountingRecord;
   }
 }
